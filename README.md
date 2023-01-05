@@ -12,7 +12,7 @@ FastAPI Project build for basic crud operation with RESTAPI pattern
 
 To install my FastAPI project, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/Iamnobody1/fastApi-rest.git`
+1. Clone the repository: `git clone https://github.com/Iamnobody1/fastApi-graphql.git`
 2. Install the dependencies: `pip install -r requirements.txt`
 
 ## Usage
