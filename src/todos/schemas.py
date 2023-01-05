@@ -1,35 +1,18 @@
 from pydantic import BaseModel
 
 
-class ItemBase(BaseModel):
+class TodoBase(BaseModel):
     title: str
-    description: str | None = None
+    completed: bool
 
 
-class ItemCreate(ItemBase):
+class TodoCreate(TodoBase):
     pass
 
+class TodoUpdate(TodoBase):
+    pass
 
-class Item(ItemBase):
+class Todo(TodoBase):
     id: int
-    owner_id: int
-
-    class Config:
-        orm_mode = True
-
-
-class UserBase(BaseModel):
-    email: str
-
-
-class UserCreate(UserBase):
-    password: str
-
-
-class User(UserBase):
-    id: int
-    is_active: bool
-    items: list[Item] = []
-
     class Config:
         orm_mode = True
