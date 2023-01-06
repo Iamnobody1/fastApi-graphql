@@ -9,13 +9,11 @@ from ..resolvers.todo_resolver import get_todo, get_todos
 @strawberry.type
 class Query:
     @strawberry.field
-    async def todos(self, info: Info) -> typing.List[Todo]:
-        """Get all todos"""
-        todos_data_list = await get_todos(info)
+    async def todos(self) -> typing.List[Todo]:
+        todos_data_list = await get_todos()
         return todos_data_list
 
     @strawberry.field
-    async def todo(self, info: Info, todo_id: int) -> Todo:
-        """Get todo by id"""
-        todo_dict = await get_todo(todo_id, info)
+    async def todo(self, todo_id: int) -> Todo:
+        todo_dict = await get_todo(todo_id)
         return todo_dict

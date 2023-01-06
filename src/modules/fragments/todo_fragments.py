@@ -1,6 +1,7 @@
 import strawberry
 
 from ..scalars.todo_scalar import (
+    Todo,
     AddTodo,
     TodoDeleted,
     TodoExists,
@@ -10,6 +11,7 @@ from ..scalars.todo_scalar import (
 
 
 AddTodoResponse = strawberry.union("AddTodoResponse", (AddTodo, TodoExists))
+UpdateTodoResponse = strawberry.union("UpdateTodoResponse", (Todo, TodoNotFound))
 DeleteTodoResponse = strawberry.union(
     "DeleteTodoResponse", (TodoDeleted, TodoNotFound, TodoIdMissing)
 )

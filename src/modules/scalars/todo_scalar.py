@@ -5,13 +5,15 @@ from pydantic import typing
 @strawberry.type
 class Todo:
     id: int
-    title: typing.Optional[str] = ""
+    title: str
+    completed: bool
 
 
 @strawberry.type
 class AddTodo:
     id: int
-    title: typing.Optional[str] = ""
+    title: str
+    completed: bool
 
 
 @strawberry.type

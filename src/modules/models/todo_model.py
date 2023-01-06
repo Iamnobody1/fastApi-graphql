@@ -9,3 +9,6 @@ class Todo(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     completed = Column(Boolean, default=False)
+
+    def as_dict(self):
+        return {"id": self.id, "title": self.title, "completed": self.completed}

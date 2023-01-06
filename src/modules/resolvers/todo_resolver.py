@@ -1,7 +1,7 @@
-from sqlalchemy import delete, insert, select
-from sqlalchemy.orm import subqueryload, load_only
+from sqlalchemy import delete, insert, select, update
+from sqlalchemy.orm import load_only
 from ...database import get_session
-from ..helpers.helper import get_only_selected_fields, get_valid_data
+from ..helpers.helper import get_valid_data
 from ..models import todo_model
 from ..scalars.todo_scalar import AddTodo, Todo, TodoDeleted, TodoExists, TodoNotFound
 
@@ -19,7 +19,7 @@ async def get_todos():
     return todos_data_list
 
 
-async def get_todo(todo_id, info):
+async def get_todo(todo_id):
     async with get_session() as s:
         sql = (
             select(todo_model.Todo)
@@ -46,16 +46,35 @@ async def add_todo(title):
         query = insert(todo_model.Todo).values(title=title)
         await s.execute(query)
 
-        sql = (
-            select(todo_model.Todo)
-            .options(load_only("title"))
-            .filter(todo_model.Todo.title == title)
-        )
+        sql = select(todo_model.Todo).filter(todo_model.Todo.title == title)
         db_todo = (await s.execute(sql)).scalars().unique().one()
         await s.commit()
 
     db_todo_serialize_data = db_todo.as_dict()
     return AddTodo(**db_todo_serialize_data)
+
+
+async def update_todo(todo_id, title, completed):
+    async with get_session() as s:
+        sql = select(todo_model.Todo).where(todo_model.Todo.id == todo_id)
+        existing_db_todo = (await s.execute(sql)).first()
+        if existing_db_todo is None:
+            return TodoNotFound()
+
+        query = (
+            update(todo_model.Todo)
+            .where(todo_model.Todo.id == todo_id)
+            .values(title=title, completed=completed)
+        )
+        await s.execute(query)
+
+        sql = select(todo_model.Todo).where(todo_model.Todo.id == todo_id)
+        db_todo = (await s.execute(sql)).scalars().unique().one()
+        await s.commit()
+
+    db_todo_serialize_data = db_todo.as_dict()
+    return Todo(**db_todo_serialize_data)
+
 
 async def delete_todo(todo_id):
     async with get_session() as s:
